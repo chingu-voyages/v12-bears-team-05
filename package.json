@@ -3,16 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "cross-env": "^6.0.3",
+    "express": "^4.17.1",
+    "express-pino-logger": "^4.0.0",
+    "mongodb": "^3.3.2",
+    "morgan": "^1.9.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "node-env-run": "^3.0.2",
+    "nodemon": "^1.19.3",
+    "npm-run-all": "^4.1.5",
+    "pino-colada": "^1.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server:prod": "cross-env NODE_ENV=production node server",
+    "server:local": "cross-env NODE_ENV=development nodemon server",
+    "dev": "concurrently \"npm run server:local\" \"npm run start\""
   },
+  "proxy": "http://localhost:3001",
   "eslintConfig": {
     "extends": "react-app"
   },
