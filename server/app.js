@@ -1,46 +1,45 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const MongoClient = require('mongodb').MongoClient;
-var mongo = require('./config/mongo');
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const appRoute = require('./routes/index');
 
-var app = express();
+dotenv.config();
 
-// Connection URL
-const url = 'mongodb://localhost:27017';
+const app = express();
+
 
 // Database Name
-const dbName = 'MealTracker';
+const dbName = "MealTracker";
 
 // Use connect method to connect to the server
-MongoClient.connect(url ,
-      { useNewUrlParser: true, useUnifiedTopology: true }, 
-      (err, client) => {
-    if (err) {
-        console.log("Failed to connect mongo :: ", err);
-    } else {
-        console.log("Connected successfully to server");
-        
-        const db = client.db(dbName);
-        mongo.setMongo(db);
+mongoose.connect(
+  process.env.DB_CONNECT + '/' + dbName, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+  },
+  () => console.log("Connected to DB!"));
 
-        app.use(logger('dev'));
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: false }));
-        app.use(cookieParser());
-        app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: false
+}));
+app.use(cookieParser());
 
-        app.use('/', indexRouter);
-        app.use('/users', usersRouter);
+app.use("/api", appRoute);
 
-    }
+if (process.env.NODE_ENV === "production") {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, "../build")));
 
-    //   client.close();
-});
-
+  // Handle React routing, return all requests to React app
+  app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "../build", "index.html"));
+  });
+}
 
 module.exports = app;
