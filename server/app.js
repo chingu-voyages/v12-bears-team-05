@@ -21,7 +21,13 @@ mongoose.connect(
     useUnifiedTopology: true,
     useNewUrlParser: true
   },
-  () => console.log("Connected to DB!"));
+  (err) => {
+    if (err) {
+      console.log("Couldn't connect to DB", err);
+      process.exit();
+    }
+    console.log("Connected to DB");
+  });
 
 app.use(logger("dev"));
 app.use(express.json());
