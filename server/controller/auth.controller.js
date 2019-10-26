@@ -89,5 +89,30 @@ const login = async (req, res) => {
   }
 };
 
+const profile = async (req, res) => {
+  const token = req.header("auth-token");
+  if (!token) return res.status(401).send("Access Denied");
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+
+    const user = await User.findOne({ _id: decodedToken._id });
+    const userResp = pick(user, ["name", "email"]);
+
+    if (!user) throw new Error("User not available");
+
+    res.send({
+      token: token,
+      user: userResp,
+      success: true
+    });
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      message: err.message
+    });
+  }
+};
 module.exports.register = register;
 module.exports.login = login;
+module.exports.profile = profile;
