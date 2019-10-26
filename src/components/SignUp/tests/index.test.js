@@ -1,12 +1,12 @@
 import React from "react";
 import { render } from "react-testing-library";
 
-import TopBar from "../index";
+import SignUp from "../index";
 
-describe("<TopBar />", () => {
+describe("<SignUp />", () => {
   it("Expect to not log errors in console", () => {
     const spy = jest.spyOn(global.console, "error");
-    render(<TopBar />);
+    render(<SignUp />);
     expect(spy).not.toHaveBeenCalled();
   });
 
@@ -17,7 +17,7 @@ describe("<TopBar />", () => {
   it("Should render and match the snapshot", () => {
     const {
       container: { firstChild }
-    } = render(<TopBar />);
+    } = render(<SignUp />);
     expect(firstChild).toMatchSnapshot();
   });
 });

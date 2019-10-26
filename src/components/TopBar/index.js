@@ -5,12 +5,12 @@
  */
 
 import React, { memo } from "react";
-import { AppBar, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/styles";
 import Kitchen from "@material-ui/icons/Kitchen";
-
+import LockOpen from "@material-ui/icons/LockOpen";
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -24,7 +24,15 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "20px"
   },
 
-  loginButton: {},
+  loginButton: {
+    // backgroundColor: "#00BCD4",
+    backgroundColor: "white",
+    color: "black",
+    "&:hover": {
+      backgroundColor: "black",
+      color: "white"
+    }
+  },
   signupButton: {
     marginLeft: "10px"
   },
@@ -58,6 +66,15 @@ const TopBar = () => {
               Meal and Receipe tracker
             </Link>
           </Typography>
+          <Link to="/login" className={classes.link}>
+            <Button
+              variant="contained"
+              startIcon={<LockOpen />}
+              className={classes.loginButton}
+            >
+              Sign In
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
     </div>

@@ -1,4 +1,4 @@
 import { combineEpics } from "redux-observable";
+import LoginSignUpEpic from "./containers/LoginSignUp/epic";
 
-const epics = [];
-export default combineEpics(...epics);
+export default combineEpics(LoginSignUpEpic);
