@@ -15,9 +15,11 @@ code {
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
+  min-width: 100%;
+  background: linear-gradient(to right, #2193b0, #6dd5ed);
 }
 
-#root {
-  background: linear-gradient(to right, #2193b0, #6dd5ed);
+.container {
+  margin-top: 65px;
 }
