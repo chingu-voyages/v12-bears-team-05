@@ -22,6 +22,7 @@ mongoose.connect(
     useUnifiedTopology: true,
     useNewUrlParser: true
   },
+
   error =>
     console.log(
       `${error ? `Error connecting to DB ${error}` : `Connected to DB`}`
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 
 app.use(logger("dev"));
 app.use(express.json());
