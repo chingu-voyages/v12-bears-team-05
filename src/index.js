@@ -9,7 +9,7 @@ import App from "./containers/Root";
 import * as serviceWorker from "./serviceWorker";
 import history from "./utils/history";
 
-const store = configureStore();
+const store = configureStore({}, history);
 
 const render = Component =>
   ReactDOM.render(

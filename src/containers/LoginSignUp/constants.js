@@ -1,0 +1,11 @@
+export const REGISTER_ACTION = "LoginSignup/REGISTER_ACTION";
+
+export const LOGIN_ACTION = "LoginSignup/LOGIN_ACTION";
+
+export const LOGIN_SUCCESS_ACTION = "Login/SignUp/LOGIN_SUCCESS_ACTION";
+
+export const LOGIN_FAILURE_ACTION = "Login/SignUp/LOGIN_FAILURE_ACTION";
+
+export const REGISTER_SUCCESS_ACTION = "LoginSignup/REGISTER_SUCCESS_ACTION";
+
+export const REGISTER_FAILURE_ACTION = "LoginSignup/REGISTER_FAILURE_ACTION";

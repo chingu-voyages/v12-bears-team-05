@@ -4,10 +4,12 @@
 
 import { createStore, applyMiddleware, compose } from "redux";
 import { routerMiddleware } from "connected-react-router";
-import { createEpicMiddleware } from "redux-observable";
+import { createEpicMiddleware, ofType } from "redux-observable";
 
 import createReducer from "./reducers";
 import epics from "./epics";
+import { BehaviorSubject } from "rxjs";
+import { mergeMap, takeUntil, switchMap } from "rxjs/operators";
 
 export default function configureStore(initialState = {}, history) {
   let composeEnhancers = compose;
@@ -24,16 +26,28 @@ export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares = [epicMiddleware, routerMiddleware(history)];
+  const middlewares = [routerMiddleware(history), epicMiddleware];
 
   const enhancers = [applyMiddleware(...middlewares)];
 
   const store = createStore(
-    createReducer(),
+    createReducer(history),
     initialState,
     composeEnhancers(...enhancers)
   );
 
+  attachHotReplacementReducer(store, history);
+
+  // Extensions
+  store.injectedReducers = {}; // Reducer registry
+  store.asyncReducers = {};
+
+  epicMiddleware.run(getHotReplacedEpic());
+
+  return store;
+}
+
+const attachHotReplacementReducer = (store, history) => {
   if (process.env.NODE_ENV === "development" && module.hot) {
     /*
      * Hot reload Redux reducers in local dev mode.
@@ -41,24 +55,19 @@ export default function configureStore(initialState = {}, history) {
     module.hot.accept("./reducers", () => {
       // eslint-disable-next-line global-require
       const nextRootReducer = require("./reducers").default;
-      store.replaceReducer(nextRootReducer);
-    });
-
-    /*
-     * Hot reload redux-epic in local dev mode.
-     */
-    module.hot.accept("./epics", () => {
-      // eslint-disable-next-line global-require
-      const getNewRootEpic = require("./epics").default;
-      epicMiddleware.replaceEpic(getNewRootEpic);
+      store.replaceReducer(nextRootReducer(history));
     });
   }
+};
 
-  // Extensions
-  store.injectedReducers = {}; // Reducer registry
-  store.asyncReducers = {};
+const getHotReplacedEpic = () => {
+  const epic$ = new BehaviorSubject(epics);
 
-  epicMiddleware.run(epics);
-
-  return store;
-}
+  if (process.env.NODE_ENV === "development" && module.hot) {
+    module.hot.accept("./epics", () => {
+      const nextRootEpic = require("./epics").default;
+      epic$.next(nextRootEpic);
+    });
+  }
+  return (...args) => epic$.pipe(switchMap(epic => epic(...args)));
+};
