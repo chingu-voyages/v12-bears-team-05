@@ -7,6 +7,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 
 import SwipeableViews from "react-swipeable-views";
 import AppBar from "@material-ui/core/AppBar";
@@ -39,10 +40,30 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function LoginSignup(props) {
-  const { onLogin, onRegister, isLoading, loginError, registerError } = props;
+  const {
+    onLogin,
+    onRegister,
+    isLoading,
+    loginError,
+    registerError,
+    location,
+    isLoggedIn
+  } = props;
+
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+
+  if (isLoggedIn) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/",
+          state: { from: location }
+        }}
+      />
+    );
+  }
 
   function handleChange(event, newValue) {
     setValue(newValue);
