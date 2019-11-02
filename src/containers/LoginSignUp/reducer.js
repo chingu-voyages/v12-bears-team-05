@@ -1,6 +1,6 @@
 /*
  *
- * BookContainer reducer
+ * LoginSignUp reducer
  *
  */
 import produce from "immer";
