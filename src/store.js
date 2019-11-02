@@ -2,20 +2,20 @@
  * Create the store with dynamic reducers
  */
 
-import { createStore, applyMiddleware, compose } from "redux";
-import { routerMiddleware } from "connected-react-router";
-import { createEpicMiddleware, ofType } from "redux-observable";
+import { createStore, applyMiddleware, compose } from 'redux';
+import { routerMiddleware } from 'connected-react-router';
+import { createEpicMiddleware } from 'redux-observable';
 
-import createReducer from "./reducers";
-import epics from "./epics";
-import { BehaviorSubject } from "rxjs";
-import { mergeMap, takeUntil, switchMap } from "rxjs/operators";
+import createReducer from './reducers';
+import epics from './epics';
+import { BehaviorSubject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 export default function configureStore(initialState = {}, history) {
   let composeEnhancers = compose;
   const epicMiddleware = createEpicMiddleware();
 
-  if (process.env.NODE_ENV !== "production" && typeof window === "object") {
+  if (process.env.NODE_ENV !== 'production' && typeof window === 'object') {
     /* eslint-disable no-underscore-dangle */
     if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
       composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({});
@@ -48,13 +48,13 @@ export default function configureStore(initialState = {}, history) {
 }
 
 const attachHotReplacementReducer = (store, history) => {
-  if (process.env.NODE_ENV === "development" && module.hot) {
+  if (process.env.NODE_ENV === 'development' && module.hot) {
     /*
      * Hot reload Redux reducers in local dev mode.
      */
-    module.hot.accept("./reducers", () => {
+    module.hot.accept('./reducers', () => {
       // eslint-disable-next-line global-require
-      const nextRootReducer = require("./reducers").default;
+      const nextRootReducer = require('./reducers').default;
       store.replaceReducer(nextRootReducer(history));
     });
   }
@@ -63,9 +63,9 @@ const attachHotReplacementReducer = (store, history) => {
 const getHotReplacedEpic = () => {
   const epic$ = new BehaviorSubject(epics);
 
-  if (process.env.NODE_ENV === "development" && module.hot) {
-    module.hot.accept("./epics", () => {
-      const nextRootEpic = require("./epics").default;
+  if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('./epics', () => {
+      const nextRootEpic = require('./epics').default;
       epic$.next(nextRootEpic);
     });
   }

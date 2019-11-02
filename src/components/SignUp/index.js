@@ -10,7 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import useForm from "react-hook-form";
-import { fontSize } from "@material-ui/system";
 import { Paper } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 
 function SignUp(props) {
   const classes = useStyles();
-  const { isLoading, onSubmit, onSwitch, authError } = props;
+  const {  onSubmit, onSwitch, authError } = props;
 
   const { register, handleSubmit, errors } = useForm({ mode: "onChange" });
 

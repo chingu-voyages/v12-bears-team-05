@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "../../utils/theme";
 import LoginSignUp from "../LoginSignUp";
 import ConnectedTopBar from "../ConnectedTopBar";
+import CreateRecipe from "../CreateRecipe";
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -15,6 +16,7 @@ export default function App() {
           <Switch>
             <Route exact path="/" component={() => <div></div>} />
             <Route path="/login" component={LoginSignUp} />
+            <Route path="/create-recipe" component={CreateRecipe} />
           </Switch>
         </Container>
       </section>

@@ -1,9 +1,9 @@
-import React from "react";
-import TopBar from "../../components/TopBar";
-import { connect } from "react-redux";
-import { compose } from "redux";
+import React from 'react';
+import TopBar from '../../components/TopBar';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
-const ConnectedTopBar = ({}) => {
+const ConnectedTopBar = () => {
   return <TopBar />;
 };
 
