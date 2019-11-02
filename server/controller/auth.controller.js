@@ -53,7 +53,12 @@ const login = async (req, res) => {
   //validating login
   try {
     const { error } = loginValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.details[0].message
+      });
+    }
 
     //checking email already exist
     const user = await User.findOne({
