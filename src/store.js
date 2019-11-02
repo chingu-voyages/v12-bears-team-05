@@ -47,13 +47,8 @@ export default function configureStore(initialState = {}, history) {
   return store;
 }
 
-<<<<<<< HEAD
-const attachHotReplacementReducer = (store, history) => {
-  if (process.env.NODE_ENV === 'development' && module.hot) {
-=======
 const attachHmrReducer = (store, history) => {
   if (process.env.NODE_ENV === "development" && module.hot) {
->>>>>>> 205c03f7fd5b16190343820bad1cfc5e24d50a78
     /*
      * Hot reload Redux reducers in local dev mode.
      */

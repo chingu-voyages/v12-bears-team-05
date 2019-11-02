@@ -4,18 +4,14 @@
  *
  */
 
-import React, { memo,Fragment } from 'react';
+import React, { memo, Fragment } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import Kitchen from '@material-ui/icons/Kitchen';
 import LockOpen from '@material-ui/icons/LockOpen';
-import { makeStyles } from "@material-ui/styles";
-import Kitchen from "@material-ui/icons/Kitchen";
-import LockOpen from "@material-ui/icons/LockOpen";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import HomeIcon from "@material-ui/icons/Home";
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/Home';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,7 +87,7 @@ const TopBar = ({ isLoggedIn, onLogout, onLogin, inLoginPage, onHome }) => {
               Home
             </Button>
           ) : !isLoggedIn ? (
-          <Button
+            <Button
               variant="contained"
               startIcon={<LockOpen />}
               className={classes.loginButton}
@@ -99,28 +95,26 @@ const TopBar = ({ isLoggedIn, onLogout, onLogin, inLoginPage, onHome }) => {
             >
               Sign In
             </Button>
-            
-         
           ) : (
             <Fragment>
-            <Button
-              variant="contained"
-              startIcon={<ExitToAppIcon />}
-              className={classes.loginButton}
-              onClick={onLogout}
-            >
-              Logout
-            </Button>
-          <Link to="/create-recipe" className={classes.link}>
-            <Button
-              variant="contained"
-              startIcon={<LockOpen />}
-              className={classes.addRecipeButton}
-            >
-              Create Recipe
-            </Button>
+              <Button
+                variant="contained"
+                startIcon={<ExitToAppIcon />}
+                className={classes.loginButton}
+                onClick={onLogout}
+              >
+                Logout
+              </Button>
+              <Link to="/create-recipe" className={classes.link}>
+                <Button
+                  variant="contained"
+                  startIcon={<LockOpen />}
+                  className={classes.addRecipeButton}
+                >
+                  Create Recipe
+                </Button>
+              </Link>
             </Fragment>
-          </Link>
           )}
         </Toolbar>
       </AppBar>
