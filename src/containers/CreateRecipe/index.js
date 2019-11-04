@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -15,6 +17,8 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import { createRecipeAction } from './actions';
+import { selectIsLoading, selectCreateRecipeError } from './selector';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CreateRecipe = () => {
+const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
   const classes = useStyles();
 
   // Recipe Image Picker Select
@@ -61,7 +65,8 @@ const CreateRecipe = () => {
   };
   const handleSubmit = e => {
     e.preventDefault();
-    // TODO : Submit Form
+    // TODO : Submit Form and do validation
+    onCreateRecipe(form);
   };
 
   // Form Data
@@ -429,4 +434,20 @@ const CreateRecipe = () => {
   );
 };
 
-export default CreateRecipe;
+const mapStateToProps = state => ({
+  isLoading: selectIsLoading(state),
+  recipeError: selectCreateRecipeError(state)
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onCreateRecipe: (...params) => dispatch(createRecipeAction(...params))
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
+export default compose(withConnect)(CreateRecipe);
