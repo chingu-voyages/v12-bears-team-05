@@ -8,8 +8,6 @@ import VisibilitySensor from 'react-visibility-sensor';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
@@ -74,6 +72,8 @@ const CreateRecipe = () => {
     servingsAmount: '',
     prepTimeHour: 0,
     prepTimeMinute: 0,
+    cookTimeHour: 0,
+    cookTimeMinute: 0,
     ingredients: [],
     instructions: [],
     currentIngredient: '',
@@ -81,12 +81,29 @@ const CreateRecipe = () => {
   });
 
   const handleChange = e => {
-    // console.log(e.target.value);
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const addInstruction = e => {
+    e.preventDefault();
+    if (form.currentInstruction !== '') {
+      setForm({
+        ...form,
+        instructions: form.instructions.concat(form.currentInstruction),
+        currentInstruction: ''
+      });
+    }
+  };
+  const removeInstruction = idx => {
+    setForm({
+      ...form,
+      instructions: form.instructions.filter(
+        instruction => instruction !== form.instructions[idx]
+      )
+    });
+  };
+
   const addIngredient = e => {
-    // Form should not be mepty
     e.preventDefault();
 
     if (form.currentIngredient !== '') {
@@ -98,35 +115,40 @@ const CreateRecipe = () => {
     }
   };
 
-  const addInstruction = e => {
-    // Form should not be mepty
-    e.preventDefault();
-    if (form.currentInstruction !== '') {
-      setForm({
-        ...form,
-        instructions: form.instructions.concat(form.currentInstruction),
-        currentInstruction: ''
-      });
-    }
-  };
-  const removeInstruction = idx => {
-    // Form should not be mepty
+  const removeIngredient = id => {
+    // Form should not be empty
     setForm({
       ...form,
-      instructions: form.instructions.filter(
-        instruction => instruction !== form.instructions[idx]
-      )
+      ingredients: form.ingredients.filter((ingredient, idx) => idx !== id)
     });
   };
 
-  const removeIngredient = idx => {
-    // Form should not be mepty
-    setForm({
-      ...form,
-      ingredients: form.ingredients.filter(
-        ingredient => ingredient !== form.ingredients[idx]
-      )
-    });
+  // Render Hours
+  const renderItemHours = () => {
+    const hours = [];
+
+    for (var i = 1; i < 23; i++) {
+      hours.push(
+        <MenuItem key={i} value={i}>
+          <em>{i} hr</em>
+        </MenuItem>
+      );
+    }
+    return hours;
+  };
+
+  // Render Minutes
+  const renderItemMinutes = () => {
+    const hours = [];
+
+    for (var i = 1; i < 60; i++) {
+      hours.push(
+        <MenuItem key={i} value={i}>
+          <em>{i} min</em>
+        </MenuItem>
+      );
+    }
+    return hours;
   };
 
   return (
@@ -201,36 +223,65 @@ const CreateRecipe = () => {
 
               <Grid container spacing={2} className={classes.grid}>
                 <Grid item xs={6}>
-                  <FormControl fullWidth variant="outlined">
-                    <InputLabel id="prepTimeHour">Hour</InputLabel>
-                    <Select
-                      labelId="prepTimeHour"
-                      value={form.prepTimeHour}
-                      name="prepTimeHour"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={0}>
-                        <em>0 hr</em>
-                      </MenuItem>
-                      <MenuItemHour />
-                    </Select>
-                  </FormControl>
+                  <Select
+                    value={form.prepTimeHour}
+                    name="prepTimeHour"
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={0}>
+                      <em>0 hr</em>
+                    </MenuItem>
+                    {renderItemHours()}
+                  </Select>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControl fullWidth variant="outlined">
-                    <InputLabel id="prepTimeMinute">Minute</InputLabel>
-                    <Select
-                      labelId="prepTimeMinute"
-                      value={form.prepTimeMinute}
-                      name="prepTimeMInute"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={0}>
-                        <em>0 min</em>
-                      </MenuItem>
-                      <MenuItemMinute />
-                    </Select>
-                  </FormControl>
+                  <Select
+                    value={form.prepTimeMinute}
+                    name="prepTimeMinute"
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  >
+                    <MenuItem value={0}>
+                      <em>0 min</em>
+                    </MenuItem>
+                    {renderItemMinutes()}
+                  </Select>
+                </Grid>
+              </Grid>
+
+              <Typography variant="h6">Cook Time</Typography>
+
+              <Grid container spacing={2} className={classes.grid}>
+                <Grid item xs={6}>
+                  <Select
+                    value={form.cookTimeHour}
+                    name="cookTimeHour"
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={0}>
+                      <em>0 hr</em>
+                    </MenuItem>
+                    {renderItemHours()}
+                  </Select>
+                </Grid>
+                <Grid item xs={6}>
+                  <Select
+                    value={form.cookTimeMinute}
+                    name="cookTimeMinute"
+                    onChange={handleChange}
+                    variant="outlined"
+                    fullWidth
+                  >
+                    <MenuItem value={0}>
+                      <em>0 min</em>
+                    </MenuItem>
+                    {renderItemMinutes()}
+                  </Select>
                 </Grid>
               </Grid>
             </Grid>
@@ -240,37 +291,40 @@ const CreateRecipe = () => {
             Ingredients
           </Typography>
 
-          <form onSubmit={addIngredient}>
-            <Grid
-              container
-              alignItems="center"
-              spacing={2}
-              style={{ marginTop: '1rem' }}
-            >
-              <Grid item xs={2}>
-                <Button type="submit" variant="contained" color="primary">
-                  <AddIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={10}>
-                <TextField
-                  onChange={handleChange}
-                  fullWidth
-                  value={form.currentIngredient}
-                  name="currentIngredient"
-                  variant="outlined"
-                  placeholder="Add One Ingredient per line"
-                />
-              </Grid>
+          <Grid
+            container
+            alignItems="center"
+            spacing={2}
+            style={{ marginTop: '1rem' }}
+          >
+            <Grid item xs={2}>
+              <Button
+                onClick={addIngredient}
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                <AddIcon />
+              </Button>
             </Grid>
-          </form>
+            <Grid item xs={10}>
+              <TextField
+                onChange={handleChange}
+                fullWidth
+                value={form.currentIngredient}
+                name="currentIngredient"
+                variant="outlined"
+                placeholder="Add One Ingredient per line"
+              />
+            </Grid>
+          </Grid>
 
           {/* List of Ingredients */}
           {form.ingredients &&
             form.ingredients.map((ingredient, idx) => (
               <Paper className={classes.cardItem} key={idx}>
                 <Grid container alignItems="center">
-                  <Grid item xs={10}>
+                  <Grid item xs={8}>
                     <Typography variant="body2">
                       {idx + 1}. {ingredient}
                     </Typography>
@@ -301,30 +355,33 @@ const CreateRecipe = () => {
           <Typography variant="h5" style={{ margin: '1rem' }}>
             Directions
           </Typography>
-          <form onSubmit={addInstruction}>
-            <Grid
-              container
-              alignItems="center"
-              spacing={2}
-              style={{ marginTop: '1rem' }}
-            >
-              <Grid item xs={2}>
-                <Button variant="contained" color="primary" type="submit">
-                  <AddIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={10}>
-                <TextField
-                  onChange={handleChange}
-                  fullWidth
-                  value={form.currentInstruction}
-                  name="currentInstruction"
-                  variant="outlined"
-                  placeholder="Add One Instruction per line"
-                />
-              </Grid>
+          <Grid
+            container
+            alignItems="center"
+            spacing={2}
+            style={{ marginTop: '1rem' }}
+          >
+            <Grid item xs={2}>
+              <Button
+                onClick={addInstruction}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                <AddIcon />
+              </Button>
             </Grid>
-          </form>
+            <Grid item xs={10}>
+              <TextField
+                onChange={handleChange}
+                fullWidth
+                value={form.currentInstruction}
+                name="currentInstruction"
+                variant="outlined"
+                placeholder="Add One Instruction per line"
+              />
+            </Grid>
+          </Grid>
 
           {form.instructions &&
             form.instructions.map((instruction, idx) => (
@@ -370,35 +427,6 @@ const CreateRecipe = () => {
       />
     </div>
   );
-};
-
-// Loop to get List of all possible hours
-const MenuItemHour = () => {
-  var rows = [];
-
-  for (var i = 1; i < 23; i++) {
-    rows.push(
-      <MenuItem key={i} value={i}>
-        <em>{i} hr</em>
-      </MenuItem>
-    );
-  }
-
-  return rows;
-};
-// Loop to get List of all possible minutes
-const MenuItemMinute = () => {
-  var rows = [];
-
-  for (var i = 1; i < 60; i++) {
-    rows.push(
-      <MenuItem key={i} value={i}>
-        <em>{i} min</em>
-      </MenuItem>
-    );
-  }
-
-  return rows;
 };
 
 export default CreateRecipe;
