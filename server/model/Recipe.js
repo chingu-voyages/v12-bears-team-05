@@ -24,11 +24,12 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     enum: ["public", "private", "friends"]
   },
-  ingredients: mongoose.Schema.Types.ObjectId,
+  ingredients: Array,
   createdDate: {
     type: Date,
     default: Date.now
-  }
+  },
+  user_id: mongoose.Schema.Types.ObjectId
 });
 
 module.exports = mongoose.model("Recipe", recipeSchema);

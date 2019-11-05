@@ -3,7 +3,12 @@ const { celebrate } = require("celebrate");
 
 const { createRecipe } = require("../controller/recipeController");
 const { recipe: recipeValidator } = require("../joiSchema");
-
-router.post("/", celebrate(recipeValidator.create), createRecipe);
+const jwtMiddleware = require("../middleware/verifyToken");
+router.post(
+  "/",
+  jwtMiddleware,
+  celebrate(recipeValidator.create),
+  createRecipe
+);
 
 module.exports = router;
