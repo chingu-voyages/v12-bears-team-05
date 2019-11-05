@@ -2,14 +2,10 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const pick = require("lodash").pick;
-const { registerValidation, loginValidation } = require("../validation");
 
 const register = async (req, res) => {
   //validating user
   try {
-    const { error } = registerValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
     //checking email already exist
     const emailExist = await User.findOne({
       email: req.body.email
@@ -52,14 +48,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   //validating login
   try {
-    const { error } = loginValidation(req.body);
-    if (error) {
-      return res.status(400).send({
-        success: false,
-        message: error.details[0].message
-      });
-    }
-
     //checking email already exist
     const user = await User.findOne({
       email: req.body.email

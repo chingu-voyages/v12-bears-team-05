@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const { isCelebrate } = require("celebrate");
 
 const appRoute = require("./routes/index");
 
@@ -61,4 +62,20 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+app.use((err, req, res, next) => {
+  let message;
+  let statusCode = 500;
+  if (isCelebrate(err)) {
+    message =
+      (err.joi && err.joi.details && err.joi.details[0].message) ||
+      "The given inputs are not valid";
+    statusCode = 400;
+  } else {
+    message = err && err.message;
+  }
+  return res.status(statusCode).json({
+    success: false,
+    message
+  });
+});
 module.exports = app;

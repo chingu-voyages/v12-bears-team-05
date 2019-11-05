@@ -2,8 +2,8 @@ import { ajax } from "rxjs/ajax";
 import { API_ENDPOINT } from "../../utils/constants";
 import { map, catchError } from "rxjs/operators";
 
-const LOGIN_API = "/user/auth/login";
-const REGISTER_API = "/user/auth/register";
+const LOGIN_API = "/user/login";
+const REGISTER_API = "/user/register";
 
 export const doLogin = payload => {
   return ajax({
