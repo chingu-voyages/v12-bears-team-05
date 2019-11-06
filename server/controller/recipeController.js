@@ -24,4 +24,9 @@ const createRecipe = async (req, res, next) => {
   }
 };
 
+const getRecipes = async (req, res) => {
+  res.json(res.paginatedResults);
+};
+
 module.exports.createRecipe = createRecipe;
+module.exports.getRecipes = getRecipes;

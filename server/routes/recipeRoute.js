@@ -1,9 +1,12 @@
 const router = require("express").Router();
 const { celebrate } = require("celebrate");
 
-const { createRecipe } = require("../controller/recipeController");
+const { createRecipe, getRecipes } = require("../controller/recipeController");
 const { recipe: recipeValidator } = require("../joiSchema");
 const jwtMiddleware = require("../middleware/verifyToken");
+const paginateMiddleware = require("../middleware/pagination");
+const Recipe = require("../model/Recipe");
+
 router.post(
   "/",
   jwtMiddleware,
@@ -11,4 +14,10 @@ router.post(
   createRecipe
 );
 
-module.exports = router;
+router.get(
+  "/",
+  jwtMiddleware,
+  paginateMiddleware(Recipe),
+  getRecipes);
+
+  module.exports = router;
