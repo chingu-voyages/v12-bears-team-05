@@ -17,6 +17,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import ChipInput from 'material-ui-chip-input';
 import { createRecipeAction } from './actions';
 import { selectIsLoading, selectCreateRecipeError } from './selector';
 
@@ -82,7 +83,8 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
     ingredients: [],
     instructions: [],
     currentIngredient: '',
-    currentInstruction: ''
+    currentInstruction: '',
+    tags: []
   });
 
   const handleChange = e => {
@@ -406,6 +408,23 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
               </Paper>
             ))}
 
+          <ChipInput
+            style={{ marginTop: '2rem', marginBottom: '2rem' }}
+            value={form.tags}
+            helperText="Enter Tags"
+            onAdd={chip => {
+              console.log(chip);
+              form.tags.push(chip);
+              setForm({ ...form, tags: form.tags });
+            }}
+            fullWidth
+            onDelete={(chip, index) => {
+              setForm({
+                ...form,
+                tags: form.tags.filter((chip, idx) => idx !== index)
+              });
+            }}
+          />
           <Button
             className={classes.createButton}
             type="submit"
