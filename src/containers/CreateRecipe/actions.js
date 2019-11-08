@@ -3,8 +3,10 @@ import * as constants from './constants';
 
 export const createRecipeAction = createAction(
   constants.CREATE_RECIPE_ACTION,
-  () => ({
+  (name,description,servings,serving_amount,prep_time,cook_time,instructions,notes,tags,images,privacy,ingredients,user_id) => ({
     // TODO : Add Payload
+
+
   })
 );
 

@@ -116,7 +116,11 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
     if (form.currentIngredient !== '') {
       setForm({
         ...form,
-        ingredients: form.ingredients.concat(form.currentIngredient),
+        ingredients: form.ingredients.concat({
+          name: form.currentIngredient,
+          amount: '',
+          description: ''
+        }),
         currentIngredient: ''
       });
     }
@@ -156,6 +160,15 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
       );
     }
     return hours;
+  };
+
+  // Set Ingredient Details
+  const setIngredientDetails = id => e => {
+    const ingredients = form.ingredients;
+    ingredients.map((ingredient, idx) =>
+      id === idx ? (ingredient[e.target.name] = e.target.value) : ingredient
+    );
+    setForm({ ...form, ingredients });
   };
 
   return (
@@ -330,12 +343,40 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
           {form.ingredients &&
             form.ingredients.map((ingredient, idx) => (
               <Paper className={classes.cardItem} key={idx}>
-                <Grid container alignItems="center">
-                  <Grid item xs={8}>
+                <Grid
+                  spacing={4}
+                  container
+                  alignItems="center"
+                  justify="space-around"
+                >
+                  <Grid item xs={4}>
                     <Typography variant="body2">
-                      {idx + 1}. {ingredient}
+                      {idx + 1}. {ingredient.name}
                     </Typography>
                   </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      value={ingredient.amount}
+                      fullWidth
+                      label="Amount"
+                      onChange={setIngredientDetails(idx)}
+                      name="amount"
+                      type="number"
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      value={ingredient.description}
+                      label="Description"
+                      multiline
+                      onChange={setIngredientDetails(idx)}
+                      name="description"
+                      variant="outlined"
+                    />
+                  </Grid>
+
                   <Grid item xs={2}>
                     <IconButton onClick={() => removeIngredient(idx)}>
                       <HighlightOffIcon fontSize="small" />
