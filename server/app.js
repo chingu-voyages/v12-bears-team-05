@@ -18,7 +18,7 @@ const dbName = "MealTracker";
 // Use connect method to connect to the server
 console.log("DB", process.env.DB_CONNECT);
 mongoose.connect(
-  process.env.DB_CONNECT + "/" + dbName,
+  process.env.DB_CONNECT,
   {
     useUnifiedTopology: true,
     useNewUrlParser: true
