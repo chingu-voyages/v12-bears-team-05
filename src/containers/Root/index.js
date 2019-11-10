@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "../../utils/theme";
 import LoginSignUp from "../LoginSignUp";
 import TopBar from "../../components/TopBar";
+import CreateRecipe from "../CreateRecipe";
 import { useSelector, useDispatch } from "react-redux";
 import { selectIsLoggedIn, selectIsLoading } from "./selector";
 import { getProfileAction, logoutAction } from "./actions";
@@ -40,6 +41,7 @@ export default function App() {
         <CssBaseline />
         <Container maxWidth="lg">
           <Switch>
+            <Route path="/create-recipe" component={CreateRecipe} />
             <Route exact path="/">
               <div>Home Page</div>
             </Route>

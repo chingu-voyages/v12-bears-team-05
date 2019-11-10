@@ -1,15 +1,11 @@
-const User = require("../model/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const pick = require("lodash").pick;
-const { registerValidation, loginValidation } = require("../validation");
+const User = require('../model/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const pick = require('lodash').pick;
 
 const register = async (req, res) => {
   //validating user
   try {
-    const { error } = registerValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
     //checking email already exist
     const emailExist = await User.findOne({
       email: req.body.email
@@ -17,7 +13,7 @@ const register = async (req, res) => {
     if (emailExist)
       return res.status(400).send({
         success: false,
-        message: "Email already exist"
+        message: 'Email already exist'
       });
 
     //hasing password
@@ -34,9 +30,9 @@ const register = async (req, res) => {
     const saveUser = await user.save();
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
 
-    const userResp = pick(saveUser, ["name", "email"]);
+    const userResp = pick(saveUser, ['name', 'email']);
 
-    res.header("auth-token", token).send({
+    res.header('auth-token', token).send({
       success: true,
       user: userResp,
       token
@@ -52,14 +48,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   //validating login
   try {
-    const { error } = loginValidation(req.body);
-    if (error) {
-      return res.status(400).send({
-        success: false,
-        message: error.details[0].message
-      });
-    }
-
     //checking email already exist
     const user = await User.findOne({
       email: req.body.email
@@ -67,7 +55,7 @@ const login = async (req, res) => {
     if (!user)
       return res.status(400).send({
         success: false,
-        message: "User does not exist"
+        message: 'User does not exist'
       });
 
     //password
@@ -75,13 +63,13 @@ const login = async (req, res) => {
     if (!validPass)
       return res.status(400).send({
         success: false,
-        message: "Invalid password"
+        message: 'Invalid password'
       });
 
-    const userResp = pick(user, ["name", "email"]);
+    const userResp = pick(user, ['name', 'email']);
 
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-    res.header("auth-token", token).send({
+    res.header('auth-token', token).send({
       success: true,
       user: userResp,
       token
@@ -95,16 +83,16 @@ const login = async (req, res) => {
 };
 
 const profile = async (req, res) => {
-  const token = req.header("auth-token");
-  if (!token) return res.status(401).send("Access Denied");
+  const token = req.header('auth-token');
+  if (!token) return res.status(401).send('Access Denied');
 
   try {
     const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
 
     const user = await User.findOne({ _id: decodedToken._id });
-    const userResp = pick(user, ["name", "email"]);
+    const userResp = pick(user, ['name', 'email']);
 
-    if (!user) throw new Error("User not available");
+    if (!user) throw new Error('User not available');
 
     res.send({
       token: token,
@@ -112,6 +100,7 @@ const profile = async (req, res) => {
       success: true
     });
   } catch (err) {
+    console.error(err);
     res.status(400).send({
       success: false,
       message: err.message
