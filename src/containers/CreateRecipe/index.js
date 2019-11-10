@@ -54,6 +54,9 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
   // Actual File
   const [recipeImage, setRecipeImage] = useState(null);
 
+  // Upload Files
+  const [files, setFiles] = useState([]);
+
   const handleClose = () => {
     setImagePickerOpen(false);
   };
@@ -63,14 +66,36 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
     const file = files[0];
     setRecipeImage(file);
 
+    setFiles(files);
     handleClose();
   };
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     // TODO : Submit Form and do validation
     console.log('Submitting');
     // console.log(JSON.stringify(form));
-    onCreateRecipe(form);
+    const fileUris = [];
+    for (const file of files) {
+      console.log(file);
+
+      const data = new FormData();
+      data.append('file', file);
+      data.append('upload_preset', 'z3pitbpd');
+      try {
+        const res = await fetch(process.env.REACT_APP_CLOUDINARY_UPLOAD_URL, {
+          method: 'POST',
+          body: data
+        });
+        const savedFile = await res.json();
+
+        fileUris.push(savedFile.secure_url);
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+
+    const newForm = { ...form, images: fileUris };
+    onCreateRecipe(newForm);
   };
 
   // Form Data
@@ -209,6 +234,7 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
               {/* Delay rendering until element is visible (lazy rendering) */}
               <VisibilitySensor>
                 <Img
+                  style={{ maxWidth: '30rem' }}
                   onClick={() => setImagePickerOpen(true)}
                   src={
                     recipeImage
@@ -543,19 +569,6 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
         dropzoneText="Drag and drop an Image file here"
         fileLimit={4} // Select only one image
         showPreviewsInDropzone={true}
-        onDrop={file => {
-          // Get The Preview of the single Image
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          });
-
-          setForm({
-            ...form,
-            images: form.images.concat(file.preview)
-          });
-
-          console.log(form);
-        }}
         showAlerts={true}
         maxFileSize={5000000}
         onClose={handleClose}
