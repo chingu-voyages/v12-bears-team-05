@@ -1,4 +1,4 @@
-const { Joi } = require('celebrate');
+const { Joi } = require("celebrate");
 
 module.exports = {
   user: {
@@ -29,8 +29,8 @@ module.exports = {
     },
     profile: {
       headers: Joi.object({
-        'auth-token': Joi.string().required()
-      })
+        "auth-token": Joi.string().required()
+      }).unknow(true)
     }
   },
   recipe: {
@@ -75,7 +75,7 @@ module.exports = {
           .required(),
         tags: Joi.array().items(Joi.string()),
         images: Joi.array().items(Joi.string().uri()),
-        privacy: Joi.string().valid(...['public', 'private', 'friends'])
+        privacy: Joi.string().valid(...["public", "private", "friends"])
       }).required()
       // .message("Payload is empty or invalid payload")
     }
