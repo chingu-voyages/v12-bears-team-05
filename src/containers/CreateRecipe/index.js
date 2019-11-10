@@ -62,11 +62,14 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
     // Save Image
     const file = files[0];
     setRecipeImage(file);
+
     handleClose();
   };
   const handleSubmit = e => {
     e.preventDefault();
     // TODO : Submit Form and do validation
+    console.log('Submitting');
+    // console.log(JSON.stringify(form));
     onCreateRecipe(form);
   };
 
@@ -75,16 +78,22 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
     name: '',
     description: '',
     servings: '',
-    servingsAmount: '',
-    prepTimeHour: 0,
-    prepTimeMinute: 0,
-    cookTimeHour: 0,
-    cookTimeMinute: 0,
+    serving_amount: '',
+    prep_time: {
+      hours: 0,
+      minutes: 0
+    },
+    privacy: 'public',
+    cook_time: {
+      hours: 0,
+      minutes: 0
+    },
     ingredients: [],
     instructions: [],
     currentIngredient: '',
     currentInstruction: '',
-    tags: []
+    tags: [],
+    images: []
   });
 
   const handleChange = e => {
@@ -171,6 +180,19 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
     setForm({ ...form, ingredients });
   };
 
+  const handleChangeCookTime = e => {
+    setForm({
+      ...form,
+      cook_time: { ...form.cook_time, [e.target.name]: e.target.value }
+    });
+  };
+  const handleChangePrepTime = e => {
+    setForm({
+      ...form,
+      prep_time: { ...form.prep_time, [e.target.name]: e.target.value }
+    });
+  };
+
   return (
     <div className={classes.root}>
       <form onSubmit={handleSubmit}>
@@ -209,6 +231,20 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
                 value={form.name}
                 onChange={handleChange}
               />
+
+              <TextField
+                variant="outlined"
+                placeholder="Enter Description"
+                label="Description"
+                required
+                multiline
+                fullWidth
+                type="text"
+                name="description"
+                style={{ marginBottom: '1rem' }}
+                value={form.description}
+                onChange={handleChange}
+              />
               <Typography variant="h6">Servings</Typography>
               <Grid container spacing={4} className={classes.grid}>
                 <Grid item xs>
@@ -232,8 +268,8 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
                     required
                     type="number"
                     fullWidth
-                    name="servingsAmount"
-                    value={form.servingsAmount}
+                    name="serving_amount"
+                    value={form.serving_amount}
                     onChange={handleChange}
                   />
                 </Grid>
@@ -244,11 +280,11 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
               <Grid container spacing={2} className={classes.grid}>
                 <Grid item xs={6}>
                   <Select
-                    value={form.prepTimeHour}
-                    name="prepTimeHour"
+                    value={form.prep_time.hours}
+                    name="hours"
                     fullWidth
                     variant="outlined"
-                    onChange={handleChange}
+                    onChange={handleChangePrepTime}
                   >
                     <MenuItem value={0}>
                       <em>0 hr</em>
@@ -258,9 +294,9 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Select
-                    value={form.prepTimeMinute}
-                    name="prepTimeMinute"
-                    onChange={handleChange}
+                    value={form.prep_time.minutes}
+                    name="minutes"
+                    onChange={handleChangePrepTime}
                     variant="outlined"
                     fullWidth
                   >
@@ -277,11 +313,11 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
               <Grid container spacing={2} className={classes.grid}>
                 <Grid item xs={6}>
                   <Select
-                    value={form.cookTimeHour}
-                    name="cookTimeHour"
+                    value={form.cook_time.hours}
+                    name="hours"
                     fullWidth
                     variant="outlined"
-                    onChange={handleChange}
+                    onChange={handleChangeCookTime}
                   >
                     <MenuItem value={0}>
                       <em>0 hr</em>
@@ -291,9 +327,9 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Select
-                    value={form.cookTimeMinute}
-                    name="cookTimeMinute"
-                    onChange={handleChange}
+                    value={form.cook_time.minutes}
+                    name="minutes"
+                    onChange={handleChangeCookTime}
                     variant="outlined"
                     fullWidth
                   >
@@ -394,6 +430,7 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
               name="notes"
               multiline
               rows="4"
+              onChange={handleChange}
               type="text"
               placeholder="Enter Notes"
             />
@@ -401,7 +438,7 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
 
           {/* Instructions */}
           <Typography variant="h5" style={{ margin: '1rem' }}>
-            Directions
+            Instructions
           </Typography>
           <Grid
             container
@@ -454,7 +491,7 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
             value={form.tags}
             helperText="Enter Tags"
             onAdd={chip => {
-              console.log(chip);
+              // console.log(chip);
               form.tags.push(chip);
               setForm({ ...form, tags: form.tags });
             }}
@@ -466,6 +503,26 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
               });
             }}
           />
+
+          <Typography variant="h5">Privacy</Typography>
+
+          <Select
+            value={form.privacy}
+            name="privacy"
+            onChange={handleChange}
+            variant="outlined"
+            placeholder="Enter Privacy"
+            style={{ marginTop: '1rem', marginBottom: '2rem' }}
+            fullWidth
+          >
+            <MenuItem value="public">
+              <em>Public</em>
+            </MenuItem>
+            <MenuItem value="private">
+              <em>Private</em>
+            </MenuItem>
+          </Select>
+
           <Button
             className={classes.createButton}
             type="submit"
@@ -484,8 +541,21 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
         acceptedFiles={['image/*']}
         showPreviews={true}
         dropzoneText="Drag and drop an Image file here"
-        fileLimit={1} // Select only one image
+        fileLimit={4} // Select only one image
         showPreviewsInDropzone={true}
+        onDrop={file => {
+          // Get The Preview of the single Image
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          });
+
+          setForm({
+            ...form,
+            images: form.images.concat(file.preview)
+          });
+
+          console.log(form);
+        }}
         showAlerts={true}
         maxFileSize={5000000}
         onClose={handleClose}
