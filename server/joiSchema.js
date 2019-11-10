@@ -30,7 +30,7 @@ module.exports = {
     profile: {
       headers: Joi.object({
         "auth-token": Joi.string().required()
-      }).unknow(true)
+      }).unknown(true)
     }
   },
   recipe: {
