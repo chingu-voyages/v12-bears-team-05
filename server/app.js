@@ -5,7 +5,6 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const { isCelebrate } = require('celebrate');
-const bodyParser = require('body-parser');
 
 const appRoute = require('./routes/index');
 
@@ -14,12 +13,11 @@ dotenv.config();
 const app = express();
 
 // Database Name
-const dbName = 'MealTracker';
 
 // Use connect method to connect to the server
 console.log('DB', process.env.DB_CONNECT);
 mongoose.connect(
-  process.env.DB_CONNECT + '/' + dbName,
+  process.env.DB_CONNECT,
   {
     useUnifiedTopology: true,
     useNewUrlParser: true
