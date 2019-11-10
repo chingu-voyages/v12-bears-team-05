@@ -8,11 +8,11 @@ Viknesh
 David
 Mariam
 Jasmeet
-**# v12-bears-team-05**
+# v12-bears-team-05
 
 Add-project-description-here | Voyage-12 | https://chingu.io/ | https://twitter.com/ChinguCollabs
 
-**## Members**
+## Members
 
 Viknesh
 
@@ -22,7 +22,7 @@ Mariam
 
 Jasmeet
 
-**## Features**
+## Features
 
 ---
 
@@ -34,9 +34,9 @@ Jasmeet
 
 - Enables creation of Recipes
 
-**## Running this project locally**
+## Running this project locally
 
-**## [Live version](https://recipeeas.herokuapp.com/)**
+## [Live version](https://recipeeas.herokuapp.com/)
 
 ```
 
@@ -46,7 +46,7 @@ npm start
 
 ```
 
-**## Dependencies**
+## Dependencies
 
 - [Prettier](https://github.com/prettier/prettier) - Code Formatter
 
