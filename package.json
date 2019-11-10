@@ -42,12 +42,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build-react": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server:prod": "cross-env NODE_ENV=production node server",
     "server:local": "cross-env NODE_ENV=development nodemon --watch ./server server",
-    "dev": "concurrently \"npm run server:local\" \"npm run start\""
+    "dev": "concurrently \"npm run server:local\" \"npm run start\"",
+     "build": "npm run build-react && npm run server:prod"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
