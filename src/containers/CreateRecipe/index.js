@@ -20,6 +20,7 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import ChipInput from 'material-ui-chip-input';
 import { createRecipeAction } from './actions';
 import { selectIsLoading, selectCreateRecipeError } from './selector';
+import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL } from './constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -80,9 +81,9 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
 
       const data = new FormData();
       data.append('file', file);
-      data.append('upload_preset', 'z3pitbpd');
+      data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
       try {
-        const res = await fetch(process.env.REACT_APP_CLOUDINARY_UPLOAD_URL, {
+        const res = await fetch(CLOUDINARY_UPLOAD_URL, {
           method: 'POST',
           body: data
         });
