@@ -65,7 +65,7 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
   const handleImageSave = files => {
     // Save Image
     const file = files[0];
-    setRecipeImage(file);
+    setRecipeImage(URL.createObjectURL(file));
 
     setFiles(files);
     handleClose();
@@ -239,7 +239,7 @@ const CreateRecipe = ({ isLoading, recipeError, onCreateRecipe }) => {
                   onClick={() => setImagePickerOpen(true)}
                   src={
                     recipeImage
-                      ? URL.createObjectURL(recipeImage)
+                      ? recipeImage
                       : ['https://place-hold.it/500x200/DEDEDE?text=Add Recipe']
                   }
                 />
